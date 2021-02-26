@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "file",
+      "type": "s4s.storage.FileStorageProperties",
+      "sourceType": "s4s.storage.FileStorageProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "file.upload-dir",
+      "type": "java.lang.String",
+      "sourceType": "s4s.storage.FileStorageProperties"
+    }
+  ],
+  "hints": []
+}
