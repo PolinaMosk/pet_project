@@ -5,21 +5,9 @@
 ## Участники
 
 Проект выполнили студенты:
-* Московская П.А. (гр.3530904/80102)
-* Шредер А.Д.     (гр.3530904/80102)
-* Лукина В.А.     (гр.3530904/80101)
-
-## Требования
-
-Требования представлены в формате UML-диаграммы:
-![UML-diagram](https://yadi.sk/i/LYxx9935X6OIKw)
-
-## Диаграммы
-
-1. System Context diagram
-![System Context Diagram](https://yadi.sk/i/7iYsmpzzsd3mLA)
-2. Container diagram
-![System Container Diagram](https://yadi.sk/i/2tlgk2AXNN_FJw)
+* Московская П.А. (backend + верстка)
+* Шредер А.Д. (верстка)
+* Лукина В.А. (react)
 
 ## Кодирование и отладка
 
