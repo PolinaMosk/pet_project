@@ -15,7 +15,7 @@ import s4s.repository.UserRepository;
 @RestController
 public class SignUpController {
     @Autowired
-    private UserRepository user_repo;
+    private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -23,7 +23,7 @@ public class SignUpController {
     public ResponseEntity<?> signUp(@RequestBody User newUser) {
         newUser.setIsOpenForRequests(true);
         newUser.setPswd(passwordEncoder.encode(newUser.getPswd()));
-        user_repo.save(newUser);
+        userRepository.save(newUser);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

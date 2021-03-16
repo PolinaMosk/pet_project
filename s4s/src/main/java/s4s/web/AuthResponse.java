@@ -4,7 +4,7 @@ import s4s.entity.User;
 
 public class AuthResponse {
     private String jwtToken;
-    User user;
+    private User user;
 
     public AuthResponse(String jwtToken, User user) {
         this.jwtToken = jwtToken;

@@ -25,19 +25,19 @@ public class User implements UserDetails {
     private long id;
 
     @Column(name = "user_type", nullable = false)
-    private UserType user_type;
+    private UserType userType;
 
     @Column(name = "first_name", nullable = false)
-    private String first_name;
+    private String firstName;
 
     @Column(name = "second_name")
-    private String second_name;
+    private String secondName;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "third_name")
-    private String third_name;
+    private String thirdName;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -64,7 +64,7 @@ public class User implements UserDetails {
     private Boolean isOpenForRequests;
 
     @Column(name = "avatar")
-    private String avatar_file;
+    private String avatarFile;
 
     @JsonIgnore
     @ElementCollection
@@ -75,10 +75,10 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return user_type == user.user_type &&
-                first_name.equals(user.first_name) &&
-                second_name.equals(user.second_name) &&
-                Objects.equals(third_name, user.third_name) &&
+        return userType == user.userType &&
+                firstName.equals(user.firstName) &&
+                secondName.equals(user.secondName) &&
+                Objects.equals(thirdName, user.thirdName) &&
                 email.equals(user.email) &&
                 login.equals(user.login) &&
                 pswd.equals(user.pswd) &&
@@ -90,11 +90,7 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user_type, first_name, second_name, description, third_name, email, login, pswd, uni, specialization, subjects, services, isOpenForRequests, avatar_file, getAuthorities());
-    }
-
-    public void addService(Service pl){
-        this.services.add(pl);
+        return Objects.hash(id, userType, firstName, secondName, description, thirdName, email, login, pswd, uni, specialization, subjects, services, isOpenForRequests, avatarFile, getAuthorities());
     }
 
     @Override

@@ -19,7 +19,7 @@ public class FileUploadController {
     @Autowired
     private FileStorageService fileStorageService;
     @Autowired
-    private UserRepository user_repo;
+    private UserRepository userRepo;
 
     @PostMapping(value = "/user/{id}/uploadAvatar", consumes = {"multipart/form-data"})
     public FileInfo uploadFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws FileUploadException {
@@ -30,9 +30,9 @@ public class FileUploadController {
                 .path(fileName)
                 .toUriString();
 
-        Optional<User> user = user_repo.findById(id);
-        user.get().setAvatar_file(fileName);
-        user_repo.save(user.get());
+        Optional<User> user = userRepo.findById(id);
+        user.get().setAvatarFile(fileName);
+        userRepo.save(user.get());
 
         return new FileInfo(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());

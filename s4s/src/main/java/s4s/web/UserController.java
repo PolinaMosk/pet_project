@@ -15,35 +15,35 @@ import java.util.*;
 @RestController
 public class UserController {
     @Autowired
-    UserRepository user_repo;
+    UserRepository userRepo;
     @Autowired
-    UniversityRepository uni_repo;
+    UniversityRepository universityRepository;
     @Autowired
-    SpecializationRepository spec_repo;
+    SpecializationRepository specializationRepository;
     @Autowired
-    SubjectRepository sub_repo;
+    SubjectRepository subjectRepository;
     @Autowired
-    ServiceRepository service_repo;
+    ServiceRepository serviceRepository;
     @Autowired
-    RequestRepository req_repo;
+    RequestRepository requestRepository;
 
 
     @GetMapping("/logins")
     public List<String> getAllLogins(){
         List<String> logins = new ArrayList<>();
-        for (User u: user_repo.findAll()) logins.add(u.getLogin());
+        for (User u: userRepo.findAll()) logins.add(u.getLogin());
         return logins;
     }
 
     @GetMapping("/users")
     public List<User> getAllUsers(){
 
-        return user_repo.findAll();
+        return userRepo.findAll();
     }
 
     @GetMapping("/users/{id}")
     public User getUserById(@PathVariable Long id) {
-        Optional<User> user = user_repo.findById(id);
+        Optional<User> user = userRepo.findById(id);
         return user.get();
     }
 
@@ -51,7 +51,7 @@ public class UserController {
     public ResponseEntity<User> getUserByJwt(){
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         String username = loggedInUser.getName();
-        return new ResponseEntity<>(user_repo.findUserByLogin(username).get(), HttpStatus.OK);
+        return new ResponseEntity<>(userRepo.findUserByLogin(username).get(), HttpStatus.OK);
     }
 
     @GetMapping("/services")
@@ -65,98 +65,98 @@ public class UserController {
 
     @DeleteMapping("/users/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        Optional<User> user = user_repo.findById(id);
-        for (Request r : req_repo.findAllByReceiver(user.get())) {
+        Optional<User> user = userRepo.findById(id);
+        for (Request r : requestRepository.findAllByReceiver(user.get())) {
             r.setReceiver(null);
             r.setStatus(Status.USER_NOT_EXIST);
         }
-        for (Request r : req_repo.findAllBySender(user.get())) {
-            req_repo.delete(r);
+        for (Request r : requestRepository.findAllBySender(user.get())) {
+            requestRepository.delete(r);
         }
-        user_repo.delete(user.get());
+        userRepo.delete(user.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/users/{id}/edit")
     public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody User edited_user) {
-        Optional<User> user = user_repo.findById(id);
+        Optional<User> user = userRepo.findById(id);
         if (user.get().equals(edited_user)) return new ResponseEntity<>(HttpStatus.OK);
-        if (edited_user.getFirst_name() != null) user.get().setFirst_name(edited_user.getFirst_name());
-        if (edited_user.getSecond_name() != null) user.get().setSecond_name(edited_user.getSecond_name());
-        if (edited_user.getThird_name() != null) user.get().setThird_name(edited_user.getThird_name());
-        if (edited_user.getUser_type() != null) user.get().setUser_type(edited_user.getUser_type());
+        if (edited_user.getFirstName() != null) user.get().setFirstName(edited_user.getFirstName());
+        if (edited_user.getSecondName() != null) user.get().setSecondName(edited_user.getSecondName());
+        if (edited_user.getThirdName() != null) user.get().setThirdName(edited_user.getThirdName());
+        if (edited_user.getUserType() != null) user.get().setUserType(edited_user.getUserType());
         if (edited_user.getEmail() != null) user.get().setEmail(edited_user.getEmail());
         if (edited_user.getPswd() != null) user.get().setPswd(edited_user.getPswd());
         user.get().setDescription(edited_user.getDescription());
-        if (edited_user.getAvatar_file() != user.get().getAvatar_file()) user.get().setAvatar_file(edited_user.getAvatar_file());
-        if (edited_user.getUser_type() != null) {
-            if (edited_user.getUser_type() == UserType.STUDENT) {
-                if (edited_user.getUni() != null && !uni_repo.existsByName(edited_user.getUni().getName()))
-                    user.get().setUni(uni_repo.save(edited_user.getUni()));
+        if (edited_user.getAvatarFile() != user.get().getAvatarFile()) user.get().setAvatarFile(edited_user.getAvatarFile());
+        if (edited_user.getUserType() != null) {
+            if (edited_user.getUserType() == UserType.STUDENT) {
+                if (edited_user.getUni() != null && !universityRepository.existsByName(edited_user.getUni().getName()))
+                    user.get().setUni(universityRepository.save(edited_user.getUni()));
                 else if (edited_user.getUni() != null)
-                    user.get().setUni(uni_repo.findByName(edited_user.getUni().getName()));
-                if (edited_user.getSpecialization() != null && !spec_repo.existsByName(edited_user.getSpecialization().getName()))
-                    user.get().setSpecialization(spec_repo.save(edited_user.getSpecialization()));
+                    user.get().setUni(universityRepository.findByName(edited_user.getUni().getName()));
+                if (edited_user.getSpecialization() != null && !specializationRepository.existsByName(edited_user.getSpecialization().getName()))
+                    user.get().setSpecialization(specializationRepository.save(edited_user.getSpecialization()));
                 else if (edited_user.getSpecialization() != null)
-                    user.get().setSpecialization(spec_repo.findByName(edited_user.getSpecialization().getName()));
+                    user.get().setSpecialization(specializationRepository.findByName(edited_user.getSpecialization().getName()));
             } else {
                 user.get().setUni(null);
                 user.get().setSpecialization(null);
                 user.get().setServices(null);
             }
-        } else if (user.get().getUser_type() == UserType.STUDENT){
-            if (edited_user.getUni() != null && !uni_repo.existsByName(edited_user.getUni().getName()))
-                user.get().setUni(uni_repo.save(edited_user.getUni()));
+        } else if (user.get().getUserType() == UserType.STUDENT){
+            if (edited_user.getUni() != null && !universityRepository.existsByName(edited_user.getUni().getName()))
+                user.get().setUni(universityRepository.save(edited_user.getUni()));
             else if (edited_user.getUni() != null)
-                user.get().setUni(uni_repo.findByName(edited_user.getUni().getName()));
-            if (edited_user.getSpecialization() != null && !spec_repo.existsByName(edited_user.getSpecialization().getName()))
-                user.get().setSpecialization(spec_repo.save(edited_user.getSpecialization()));
+                user.get().setUni(universityRepository.findByName(edited_user.getUni().getName()));
+            if (edited_user.getSpecialization() != null && !specializationRepository.existsByName(edited_user.getSpecialization().getName()))
+                user.get().setSpecialization(specializationRepository.save(edited_user.getSpecialization()));
             else if (edited_user.getSpecialization() != null)
-                user.get().setSpecialization(spec_repo.findByName(edited_user.getSpecialization().getName()));
+                user.get().setSpecialization(specializationRepository.findByName(edited_user.getSpecialization().getName()));
         }
-        user_repo.save(user.get());
+        userRepo.save(user.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/users/{id}/add_subject")
     public ResponseEntity<?> addSubjects(@PathVariable Long id, @RequestBody Subject subject) {
-        Optional<User> user = user_repo.findById(id);
-        if (!sub_repo.existsByName(subject.getName())) {
-            sub_repo.save(subject);
+        Optional<User> user = userRepo.findById(id);
+        if (!subjectRepository.existsByName(subject.getName())) {
+            subjectRepository.save(subject);
         }
-        user.get().getSubjects().add(sub_repo.findByName(subject.getName()).get());
-        user_repo.save(user.get());
+        user.get().getSubjects().add(subjectRepository.findByName(subject.getName()).get());
+        userRepo.save(user.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}/delete_subject")
     public ResponseEntity<?> deleteSubject(@PathVariable Long id, @RequestBody Subject subject) {
-        Optional<User> user = user_repo.findById(id);
-        user.get().getSubjects().remove(sub_repo.findByName(subject.getName()).get());
-        user_repo.save(user.get());
+        Optional<User> user = userRepo.findById(id);
+        user.get().getSubjects().remove(subjectRepository.findByName(subject.getName()).get());
+        userRepo.save(user.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/users/{id}/add_service")
     public ResponseEntity<?> addService(@PathVariable Long id, @RequestBody Service service) {
-        Optional<User> user = user_repo.findById(id);
+        Optional<User> user = userRepo.findById(id);
         if (user.get().getServices().contains(service)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        service_repo.save(service);
-        user.get().getServices().add(service_repo.findByName(service.getName()));
-        user_repo.save(user.get());
+        serviceRepository.save(service);
+        user.get().getServices().add(serviceRepository.findByName(service.getName()));
+        userRepo.save(user.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}/delete_service")
     public ResponseEntity<?> deleteService(@PathVariable Long id, @RequestBody String service_name) {
-        Service service = service_repo.findByName(service_name);
-        Optional<User> user = user_repo.findById(id);
+        Service service = serviceRepository.findByName(service_name);
+        Optional<User> user = userRepo.findById(id);
         List<User> l = new ArrayList<>();
         user.get().getServices().remove(service);
-        service_repo.delete(service);
-        user_repo.save(user.get());
+        serviceRepository.delete(service);
+        userRepo.save(user.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

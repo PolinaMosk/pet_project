@@ -14,8 +14,8 @@ public class Dialog {
     @OneToMany
     private List<Message> messages;
 
-    public Dialog(Long id_user1, Long id_user2, List<Message> messages) {
-        this.id = id_user1.toString() + "_" + id_user2.toString();
+    public Dialog(Long idUser1, Long idUser2, List<Message> messages) {
+        this.id = idUser1.toString() + "_" + idUser2.toString();
         this.messages = messages;
     }
 

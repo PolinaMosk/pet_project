@@ -19,70 +19,70 @@ import java.util.Set;
 @RestController
 public class RequestController {
     @Autowired
-    RequestRepository req_repo;
+    RequestRepository reqRepo;
     @Autowired
-    UserRepository user_repo;
+    UserRepository userRepo;
 
     @GetMapping("/requests")
     public List<Request> getAllRequests(){
-        return req_repo.findAll();
+        return reqRepo.findAll();
     }
     @PostMapping("/requests/create/{sender_id}/{receiver_id}")
     public ResponseEntity<?> createRequest(@PathVariable Long sender_id, @PathVariable Long receiver_id, @RequestBody Request request) throws NotFoundException {
-        Optional<User> user_sender = user_repo.findById(sender_id);
-        Optional<User> user_receiver = user_repo.findById(receiver_id);
+        Optional<User> user_sender = userRepo.findById(sender_id);
+        Optional<User> user_receiver = userRepo.findById(receiver_id);
         if (user_receiver.get().getIsOpenForRequests() == false) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         if (user_sender.isPresent() && user_receiver.isPresent()){
             request.setSender(user_sender.get());
             request.setReceiver(user_receiver.get());
             request.setStatus(Status.SENT);
         } else throw new NotFoundException("users not found");
-        req_repo.save(request);
+        reqRepo.save(request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/requests/in_requests/{user_id}")
     public Set<Request> getInRequests(@PathVariable Long user_id){
-        Optional<User> user = user_repo.findById(user_id);
-        return req_repo.findAllByReceiver(user.get());
+        Optional<User> user = userRepo.findById(user_id);
+        return reqRepo.findAllByReceiver(user.get());
     }
 
     @GetMapping("/requests/out_requests/{user_id}")
     public Set<Request> getOutRequests(@PathVariable Long user_id){
-        Optional<User> user = user_repo.findById(user_id);
-        return req_repo.findAllBySender(user.get());
+        Optional<User> user = userRepo.findById(user_id);
+        return reqRepo.findAllBySender(user.get());
     }
 
     @PutMapping("/requests/change_status/{id}/{status}")
     public Request changeStatus(@PathVariable Long id, @PathVariable Status status) throws NotFoundException {
-        Optional<Request> request = req_repo.findById(id);
+        Optional<Request> request = reqRepo.findById(id);
         if (request.isPresent()) {
             request.get().setStatus(status);
         } else throw new NotFoundException("request not found");
-        return req_repo.save(request.get());
+        return reqRepo.save(request.get());
     }
 
     @DeleteMapping("/requests/cancel_sending/{id}")
     public ResponseEntity<?> cancelSending(@PathVariable Long id) {
-        Optional<Request> req = req_repo.findById(id);
+        Optional<Request> req = reqRepo.findById(id);
         req.get().setSender(null);
         req.get().setReceiver(null);
-        req_repo.deleteById(id);
+        reqRepo.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/requests/deny/{id}")
     public ResponseEntity<?> denyRequest(@PathVariable Long id) {
-        Optional<Request> req = req_repo.findById(id);
+        Optional<Request> req = reqRepo.findById(id);
         req.get().setReceiver(null);
         req.get().setStatus(Status.DECLINED);
-        req_repo.save(req.get());
+        reqRepo.save(req.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/requests/{id}/close")
     public ResponseEntity<?> closeForRequests(@PathVariable Long id) {
-        Optional<User> user = user_repo.findById(id);
+        Optional<User> user = userRepo.findById(id);
         user.get().setIsOpenForRequests(false);
         return new ResponseEntity<>(HttpStatus.OK);
     }

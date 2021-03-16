@@ -8,7 +8,7 @@ public class Search {
     private Set<University> unis;
     private Set<Specialization> specs;
     private Set<Subject> subs;
-    private UserType user_type;
+    private UserType userType;
 
     public Set<University> getUnis() {
         return unis;
@@ -34,11 +34,11 @@ public class Search {
         this.subs = subs;
     }
 
-    public UserType getUser_type() {
-        return user_type;
+    public UserType getUserType() {
+        return userType;
     }
 
-    public void setUser_type(UserType user_type) {
-        this.user_type = user_type;
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

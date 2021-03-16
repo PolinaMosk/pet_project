@@ -25,14 +25,11 @@ public class FileDownloadController {
     private static final Logger logger = LoggerFactory.getLogger(FileDownloadController.class);
 
     @Autowired
-    private FileStorageService file_service;
-
-    @Autowired
-    private UserRepository user_repo;
+    private FileStorageService fileStorageService;
 
     @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) throws FileUploadException {
-        Resource resource = file_service.loadFileAsResource(fileName);
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
         String contentType = null;
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());

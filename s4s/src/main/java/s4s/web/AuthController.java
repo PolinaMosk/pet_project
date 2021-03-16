@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import s4s.entity.User;
 import s4s.repository.UserRepository;
-import s4s.service.CustomUserDetailsService;
 import s4s.service.JwtUtil;
 
 import java.util.Optional;
@@ -20,11 +19,9 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
 public class AuthController {
-    @Autowired
-    private CustomUserDetailsService ud_service;
 
     @Autowired
-    private UserRepository user_repo;
+    private UserRepository userRepo;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -46,7 +43,7 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", e);
         }
         String jwt = jwtUtil.generateToken((UserDetails) authentication.getPrincipal());
-        Optional<User> user = user_repo.findUserByLogin(authRequest.getLogin());
+        Optional<User> user = userRepo.findUserByLogin(authRequest.getLogin());
         return new AuthResponse(jwt, user.get());
     }
 }

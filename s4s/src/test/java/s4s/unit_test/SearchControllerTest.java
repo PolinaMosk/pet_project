@@ -182,7 +182,7 @@ public class SearchControllerTest {
         search_params.setSpecs(spec_list);
         search_params.setUnis(uni_list);
         search_params.setSubs(sub_list);
-        search_params.setUser_type(UserType.STUDENT);
+        search_params.setUserType(UserType.STUDENT);
         MvcResult result = mvc.perform(post("/search").header("Origin", "http://localhost:8080")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(search_params))).andReturn();
@@ -210,7 +210,7 @@ public class SearchControllerTest {
         search_params.setSpecs(spec_list);
         search_params.setUnis(uni_list);
         search_params.setSubs(sub_list);
-        search_params.setUser_type(UserType.HIGH_SCHOOL_STUDENT);
+        search_params.setUserType(UserType.HIGH_SCHOOL_STUDENT);
 
         MvcResult result2 = mvc.perform(post("/search").header("Origin", "http://localhost:8080")
                 .contentType(MediaType.APPLICATION_JSON)

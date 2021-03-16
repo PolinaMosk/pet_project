@@ -212,7 +212,7 @@ public class IntegrationTesting {
 
         Search search_params = new Search();
         search_params.setSubs(set);
-        search_params.setUser_type(UserType.STUDENT);
+        search_params.setUserType(UserType.STUDENT);
         search_params.setUnis(uni_list);
         search_params.setSpecs(spec_list);
         HttpEntity<Search> entity6 = new HttpEntity<>(search_params, headers);

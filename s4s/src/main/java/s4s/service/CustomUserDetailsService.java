@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
-    private UserRepository user_repo;
+    private UserRepository userRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> myUser = user_repo.findUserByLogin(username);
+        Optional<User> myUser = userRepo.findUserByLogin(username);
         if (!myUser.isPresent()) {
             throw new UsernameNotFoundException("Unknown user: " + username);
         }
